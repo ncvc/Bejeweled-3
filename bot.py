@@ -10,7 +10,7 @@ class Bot:
     def start(self):
         while self.board.gameOver != True:
             self.board = self.boardReader.read()
-            self.ai.move(self.board)
+            self.ai.move(self.board)o
         
         return self.board
 
