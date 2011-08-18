@@ -3,9 +3,13 @@ class Gem:
         self.color = color
         self.status = status
         self.point = point
+    
+    def __repr__(self):
+        return 'Gem(%s, %s, %s)' % (self.color, self.status, self.point)
 
 class GameState:
     def __init__(self):
+        self.gameOver = False
         self.board = []
         
         self.level = 0

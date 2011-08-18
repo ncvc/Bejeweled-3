@@ -51,33 +51,40 @@ class GameInterface:
         gemList = []
         bmp = bitmap.capture_screen()
         
+        print self.gemImgs
+        totalGems = 0
         maxX = maxY = 0
         
         for gemColor, gemImg in self.gemImgs.items():
-            (x, y) = bmp.find_bitmap(gemImg)
-            gemRelPt = Point(x, y) - BOARD_OFFSET - GAME_OFFSET
-            gemBoardX = int(gemRelPt.x / PIECE_OFFSET.x)
-            gemBoardY = int(gemRelPt.y / PIECE_OFFSET.y)
-            
-            if gemBoardX > maxX:
-                maxX = gemBoardX
-            
-            if gemBoardY > maxY:
-                maxY = gemBoardY
-            
-            gemBoardPt = Point(gemBoardX, gemBoardY)
-            
-            gem = Gem(gemColor, 'status', gemBoardPt)
-            gemList.append(gem)
+            gemCoords = bmp.find_every_bitmap(gemImg, .6)
+            gemColors=0
+            for x, y in gemCoords:
+                if x > self.boardOffset.x and x < self.boardOffset.x + PIECE_OFFSET.x * 8 and y > self.boardOffset.y and y < self.boardOffset.y + PIECE_OFFSET.y * 8:
+                    gemColors+=1
+                    totalGems+=1
+                    gemRelPt = Point(x, y) - self.boardOffset
+                    gemBoardX = int(gemRelPt.x / PIECE_OFFSET.x)
+                    gemBoardY = int(gemRelPt.y / PIECE_OFFSET.y)
+                    
+                    if gemBoardX > maxX:
+                        maxX = gemBoardX
+                    
+                    if gemBoardY > maxY:
+                        maxY = gemBoardY
+                    
+                    gemBoardPt = Point(gemBoardX, gemBoardY)
+                    
+                    gem = Gem(gemColor, 'status', gemBoardPt)
+                    gemList.append(gem)
         
-        gems = [[] for i in range(maxY)]
+        gems = [[Gem('red.bmp', 'default', Point(x, y)) for x in range(8)] for y in range(8)]
         for gem in gemList:
             gemPt = gem.point
             gems[gemPt.y][gemPt.x] = gem
         
-        self.game.board = gems
+        self.gameState.board = gems
         
-        return self.game
+        return self.gameState
     
     # Loads all gem images into self.gemImgs, with the filename as the key
     def loadGems(self):
@@ -100,8 +107,8 @@ class GameInterface:
 
     # Converts board coordinates to absolute screen coordinates
     def boardToAbsPt(self, boardPt):
-        absX = self.gameOffset.x + self.boardOffset.x + boardPt.x * PIECE_OFFSET.x + PIECE_OFFSET.x / 2
-        absY = self.gameOffset.y + self.boardOffset.y + boardPt.y * PIECE_OFFSET.y + PIECE_OFFSET.y / 2
+        absX = self.boardOffset.x + boardPt.x * PIECE_OFFSET.x + PIECE_OFFSET.x / 2
+        absY = self.boardOffset.y + boardPt.y * PIECE_OFFSET.y + PIECE_OFFSET.y / 2
         
         return Point(absX, absY)
 
@@ -109,3 +116,5 @@ class GameInterface:
 if __name__ == '__main__':
     time.sleep(2)
     gi = GameInterface()
+    
+    print gi.readGame()
