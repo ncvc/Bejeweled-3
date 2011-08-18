@@ -1,5 +1,5 @@
 from autopy import mouse, alert, bitmap
-from gameState import Point, Game, Gem
+from gameState import Point, GameState, Gem
 import time
 import os
 
@@ -24,14 +24,14 @@ BOARD_OFFSET = Point(198, 60)
 # Distance between pieces
 PIECE_OFFSET = Point(47, 47)
 
-class BoardReader:
+class GameInterface:
     def __init__(self):
         self.gameOffset = Point()
         self.boardOffset = Point()
         
         self.gemImgs = {}
         
-        self.game = Game()
+        self.gameState = GameState()
         
         self.calibrate()
         self.loadGems()
@@ -46,8 +46,8 @@ class BoardReader:
         self.gameOffset = Point(x, y) + GAME_OFFSET
         self.boardOffset = self.gameOffset + BOARD_OFFSET
     
-    # Reads the board from the screen and returns a Board representing the game board
-    def read(self):
+    # Reads the board from the screen and returns a GameState
+    def readGame(self):
         gemList = []
         bmp = bitmap.capture_screen()
         
@@ -85,31 +85,11 @@ class BoardReader:
         
         for fileName in files:
             self.gemImgs[fileName] = bitmap.Bitmap.open(os.path.join(GEM_DIR, fileName))
+    
+    def makeMove(self, move):
+        firstPt, secondPt = move
 
 
 if __name__ == '__main__':
     time.sleep(2)
-    br = BoardReader()
-    
-
-def lol():
-    print br.gameOffset
-    print br.SEPt
-    
-    time.sleep(1)
-    
-    rect = ((Point() - br.gameOffset).toTuple(), br.SEPt.toTuple())
-    rect = ((100, 100), (1024, 1024))
-    print rect
-    bitmap.capture_screen(rect).save('C:/Users/Nathan/Programming/Bejeweled-3/lol.bmp')
-    
-    alert.alert('done', 'lol')
-
-def pixels():
-    alert.alert('Place the cursor at the top left of the flash game and press space', 'BoardReader')
-    (NWX, NWY) = mouse.get_pos()
-    self.gameOffset = Point(NWX, NWY)
-    
-    alert.alert('Place the cursor at the bottom right of the flash game and press space', 'BoardReader')
-    (SEX, SEY) = mouse.get_pos()          #lol
-    self.SEPt = Point(SEX, SEY)
+    gi = GameInterface()

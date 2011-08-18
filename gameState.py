@@ -4,7 +4,7 @@ class Gem:
         self.status = status
         self.point = point
 
-class Game:
+class GameState:
     def __init__(self):
         self.board = []
         
