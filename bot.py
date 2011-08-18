@@ -5,14 +5,14 @@ class Bot:
     def __init__(self):
         self.ai = AI()
         self.boardReader = boardReader.BoardReader()
-        self.board = gameState.Board()
+        self.game = gameState.Game()
     
     def start(self):
-        while self.board.gameOver != True:
-            self.board = self.boardReader.read()
-            self.ai.move(self.board)o
+        while self.game.gameOver != True:
+            self.game = self.boardReader.read()
+            boardReader.swap(self.ai.determineMove(self.game))
         
-        return self.board
+        return self.game
 
 def main():
     bot = Bot()
