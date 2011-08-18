@@ -5,7 +5,7 @@ class AI:
     #boardNotTallEnough = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
 
     #takes a board and returns a tuple of two points that should be switched
-    def determineMove(board):
+    def determineMove(self, board):
         height = len(board)
         if height < 4:
             print "invalid board"
@@ -138,6 +138,6 @@ class AI:
                 if self.colorsMatch(gem1, gem5, gem6):
                     return (gem1.point, gem4.point)
                 
-    def colorsMatch(gem1, gem2, gem3):
+    def colorsMatch(self, gem1, gem2, gem3):
         return gem1.color == gem2.color == gem3.color
         
