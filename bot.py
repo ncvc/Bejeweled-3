@@ -1,6 +1,7 @@
 import gameInterface
 import gameState
 import AI
+import time
 
 class Bot:
     def __init__(self):
@@ -10,9 +11,10 @@ class Bot:
     
     def start(self):
         while self.gameState.gameOver != True:
+            time.sleep(2)
             self.gameState = self.gameInterface.readGame()
             move = self.ai.determineMove(self.gameState)
-            self.gameInterface.swap(move)
+            self.gameInterface.makeMove(move)
         
         return self.gameState
 

@@ -86,8 +86,24 @@ class GameInterface:
         for fileName in files:
             self.gemImgs[fileName] = bitmap.Bitmap.open(os.path.join(GEM_DIR, fileName))
     
+    # Click and drag the mouse to make a move - takes a tuple of board coordinates
     def makeMove(self, move):
         firstPt, secondPt = move
+        
+        absFirst = self.boardToAbsPt(firstPt)
+        absSecond = self.boardToAbsPt(secondPt)
+        
+        mouse.move(absFirst.x, absFirst.y)
+        mouse.toggle(True)
+        mouse.move(absSecond.x, absSecond.y)
+        mouse.toggle(False)
+
+    # Converts board coordinates to absolute screen coordinates
+    def boardToAbsPt(self, boardPt):
+        absX = self.gameOffset.x + self.boardOffset.x + boardPt.x * PIECE_OFFSET.x + PIECE_OFFSET.x / 2
+        absY = self.gameOffset.y + self.boardOffset.y + boardPt.y * PIECE_OFFSET.y + PIECE_OFFSET.y / 2
+        
+        return Point(absX, absY)
 
 
 if __name__ == '__main__':
