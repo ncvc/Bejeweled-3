@@ -5,7 +5,12 @@ class Gem:
 
 class Board:
     def __init__(self):
-        self.board = [][]
+        self.board = []
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
     
     
     
