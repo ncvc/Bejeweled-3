@@ -1,11 +1,16 @@
 class Gem:
-    def __init__(self, color, status):
+    def __init__(self, color, status, point):
         self.color = color
         self.status = status
+        self.point = point
 
-class Board:
+class Game:
     def __init__(self):
         self.board = []
+        
+        self.level = 0
+        self.score = 0
+        self.percentComplete = 0
 
 class Point:
     def __init__(self, x=0, y=0):

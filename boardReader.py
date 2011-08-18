@@ -1,5 +1,5 @@
 from autopy import mouse, alert, bitmap
-from gameState import Point, Board, Gem
+from gameState import Point, Game, Gem
 import time
 import os
 
@@ -29,11 +29,9 @@ class BoardReader:
         self.gameOffset = Point()
         self.boardOffset = Point()
         
-        self.gems = []
+        self.gemImgs = {}
         
-        self.level = 0
-        self.score = 0
-        self.percentComplete = 0
+        self.game = Game()
         
         self.calibrate()
         self.loadGems()
@@ -48,29 +46,51 @@ class BoardReader:
         self.gameOffset = Point(x, y) + GAME_OFFSET
         self.boardOffset = self.gameOffset + BOARD_OFFSET
     
+    # Reads the board from the screen and returns a Board representing the game board
     def read(self):
-        bmp = self.getScreen()
-    
-    def getScreen(self):
-        topLeft = BOARD_OFFSET.toTuple()
-        bottomRight = (BOARD_OFFSET + GAME_SIZE).toTuple()
-        rect = (topLeft, bottomRight)
+        gemList = []
+        bmp = bitmap.capture_screen()
         
-        return bitmap.capture_screen_portion(rect)
+        maxX = maxY = 0
+        
+        for gemColor, gemImg in self.gemImgs.items():
+            (x, y) = bmp.find_bitmap(gemImg)
+            gemRelPt = Point(x, y) - BOARD_OFFSET - GAME_OFFSET
+            gemBoardX = int(gemRelPt.x / PIECE_OFFSET.x)
+            gemBoardY = int(gemRelPt.y / PIECE_OFFSET.y)
+            
+            if gemBoardX > maxX:
+                maxX = gemBoardX
+            
+            if gemBoardY > maxY:
+                maxY = gemBoardY
+            
+            gemBoardPt = Point(gemBoardX, gemBoardY)
+            
+            gem = Gem(gemColor, 'status', gemBoardPt)
+            gemList.append(gem)
+        
+        gems = [[] for i in range(maxY)]
+        for gem in gemList:
+            gemPt = gem.point
+            gems[gemPt.y][gemPt.x] = gem
+        
+        self.game.board = gems
+        
+        return self.game
     
+    # Loads all gem images into self.gemImgs, with the filename as the key
     def loadGems(self):
         files = os.listdir(GEM_DIR)
         
         for fileName in files:
-            self.gems.append(bitmap.Bitmap.open(os.path.join(GEM_DIR, fileName)))
+            self.gemImgs[fileName] = bitmap.Bitmap.open(os.path.join(GEM_DIR, fileName))
+
 
 if __name__ == '__main__':
     time.sleep(2)
     br = BoardReader()
     
-    mouse.move(br.gameOffset.x, br.gameOffset.y)
-    time.sleep(2)
-    mouse.move(br.boardOffset.x, br.boardOffset.y)
 
 def lol():
     print br.gameOffset
