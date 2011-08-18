@@ -1,0 +1,1 @@
+A colleague of mine recently reached over 1,000,000 points on Bejewled-3 on xbox.com's newly released webgames. He challenged anyone to beat his score. Armed with a script, we will. That's what you get for challenging MIT students. The target: xbox.com/marketplace/products/bejeweled-3 

@@ -22,11 +22,11 @@ class AI:
                 gem3 = board[height-1-i][j+2]
                 gem4 = board[height-1-i][j+3]
                 
-                #case XXoX
+                #XXoX, X's are same color, o's are any other color
                 if colorsMatch(gem1, gem2, gem4):
                     return (gem3.point, gem4.point)
                     
-                #case XoXX
+                #XoXX
                 if colorsMatch(gem1, gem3, gem4):
                     return (gem1.point, gem2.point)
                     
@@ -38,7 +38,6 @@ class AI:
                 gem3 = board[height-j-3][i]
                 gem4 = board[height-j-4][i]
 
-                #case
                 #X
                 #X
                 #o
@@ -46,14 +45,99 @@ class AI:
                 if gem1.color == gem2.color == gem4.color:
                     return (gem3.point, gem4.point)
 
-                #case
                 #X
                 #o
                 #X
                 #X
                 if gem1.color == gem3.color == gem4.color:
                     return (gem1.point, gem2.point)
-            
+                
+        for i in range(height-1):
+            for j in range(width - 2):
+                gem1 = board[height-1-i][j]
+                gem2 = board[height-1-i][j+1]
+                gem3 = board[height-1-i][j+2]
+                gem4 = board[height-2-i][j]
+                gem5 = board[height-2-i][j+1]
+                gem6 = board[height-2-i][j+2]
+                
+                #ooX 4,5,6
+                #XXo 1,2,3
+                if colorsMatch(gem1, gem2, gem6):
+                    return (gem3.point, gem6.point)
+
+                #XXo 4,5,6
+                #ooX 1,2,3
+                if colorsMatch(gem3, gem4, gem5):
+                    return (gem3.point, gem6.point)
+
+                #XoX 4,5,6
+                #oXo 1,2,3
+                if colorsMatch(gem2, gem4, gem6):
+                    return (gem2.point, gem5.point)
+
+                #oXo 4,5,6
+                #XoX 1,2,3
+                if colorsMatch(gem1, gem3, gem5):
+                    return (gem2.point, gem5.point)
+
+                #Xoo 4,5,6
+                #oXX 1,2,3
+                if colorsMatch(gem2, gem3, gem4):
+                    return (gem1.point, gem4.point)
+
+                #oXX 4,5,6
+                #Xoo 1,2,3
+                if colorsMatch(gem1, gem5, gem6):
+                    return (gem1.point, gem4.point)
+                
+        for i in range (width-1):
+            for j in range(height - 2):
+                gem1 = board[height-j-1][i]
+                gem2 = board[height-j-2][i]
+                gem3 = board[height-j-3][i]
+                gem4 = board[height-j-1][i+1]
+                gem5 = board[height-j-2][i+1]
+                gem6 = board[height-j-3][i+1]
+
+                print gem1, gem2, gem3, gem4, gem5, gem6
+
+                #Xo 6,3
+                #oX 5,2
+                #oX 4,1
+                if colorsMatch(gem1, gem2, gem6):
+                    return (gem3.point, gem6.point)
+
+                #oX 6,3
+                #Xo 5,2
+                #Xo 4,1
+                if colorsMatch(gem3, gem4, gem5):
+                    return (gem3.point, gem6.point)
+                
+                #Xo 6,3
+                #oX 5,2
+                #Xo 4,1
+                if colorsMatch(gem2, gem4, gem6):
+                    return (gem2.point, gem5.point)
+                
+                #oX 6,3
+                #Xo 5,2
+                #oX 4,1
+                if colorsMatch(gem1, gem3, gem5):
+                    return (gem2.point, gem5.point)
+                
+                #oX 6,3
+                #oX 5,2
+                #Xo 4,1
+                if colorsMatch(gem2, gem3, gem4):
+                    return (gem1.point, gem4.point)
+                
+                #Xo 6,3
+                #Xo 5,2
+                #oX 4,1
+                if colorsMatch(gem1, gem5, gem6):
+                    return (gem1.point, gem4.point)
+                
     def colorsMatch(gem1, gem2, gem3):
         return gem1.color == gem2.color == gem3.color
         
