@@ -75,5 +75,9 @@ class Move:
         self.point1 = point1
         self.point2 = point2
         self.score = score
+<<<<<<< HEAD
+=======
+        
+>>>>>>> bf45dcc43951ba0b1de6fc91fcbda887898bbf0c
     def pointTuple(self):
         return (self.point1, self.point2)

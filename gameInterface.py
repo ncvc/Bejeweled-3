@@ -103,20 +103,30 @@ class GameInterface:
         return color
 
     # Click and drag the mouse to make a move - takes a tuple of board coordinates
+    # Attempts to place the cursor back where it found it
     def makeMove(self, move):
         firstPt, secondPt = move
         
         absFirst = self.boardToAbsPt(firstPt)
         absSecond = self.boardToAbsPt(secondPt)
         
+        lastX, lastY = mouse.get_pos()
+        
         mouse.move(absFirst.x, absFirst.y)
         mouse.toggle(True)
         mouse.move(absSecond.x, absSecond.y)
         mouse.toggle(False)
+        
+        mouse.move(lastX, lastY)
     
     # Move mouse off the board
     def moveOffBoard(self):
-        mouse.move(self.gameOffset.x, self.gameOffset.y)
+        mouse.move(self.gameOffset.x - 10, self.gameOffset.y - 10)
+    
+    def isMouseOnGame(self):
+        (x, y) = mouse.get_pos()
+        
+        return x > self.gameOffset.x and x < self.gameOffset.x + GAME_SIZE.x and y > self.gameOffset.y and y < self.gameOffset.y + GAME_SIZE.y
 
     # Converts board coordinates to absolute screen coordinates (the center of the tile)
     def boardToAbsPt(self, boardPt):
