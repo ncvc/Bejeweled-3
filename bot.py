@@ -14,6 +14,7 @@ class Bot:
     
     def start(self):
         time.sleep(2)
+        
         while self.gameState.gameOver != True:
             time.sleep(1)
             if self.gameInterface.isMouseOnGame():
@@ -34,6 +35,7 @@ class Bot:
         print 'done!'
         
         return self.gameState
+        
 
 def main():
     bot = Bot()

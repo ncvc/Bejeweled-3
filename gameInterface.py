@@ -6,11 +6,14 @@ import os
 # Image directory
 IMG_DIR = os.path.join(os.getcwd(), 'images')
 
-# Gem directory
-GEM_DIR = os.path.join(IMG_DIR, 'gems')
-
 # Path to the calibration image
 CALIBRATION_IMAGE_PATH = os.path.join(IMG_DIR, 'hint.bmp')
+
+# Path to the submit button image
+SUBMIT_IMAGE_PATH = os.path.join(IMG_DIR, 'submit.bmp')
+
+# Path to the replay button image
+REPLAY_IMAGE_PATH = os.path.join(IMG_DIR, 'replay.bmp')
 
 # Game offset relative to the calibration image
 GAME_OFFSET = Point(-66, -354)
@@ -44,6 +47,9 @@ class GameInterface:
         self.gameState = GameState(boardDim)
         
         self.calibrate()
+        
+        self.submitImg = bitmap.Bitmap.open(SUBMIT_IMAGE_PATH)
+        self.replayImg = bitmap.Bitmap.open(REPLAY_IMAGE_PATH)
     
     # Sets the location of the top left of the board - all other points are represented relative to the gameOffset
     def calibrate(self):
@@ -58,6 +64,14 @@ class GameInterface:
     # Reads the board from the screen and returns a GameState
     def readGame(self):
         bmp = bitmap.capture_screen()
+        
+        submitPt = bmp.find_bitmap(self.submitImg)
+        
+        if submitPt != None:
+            mouse.move(submitPt[0], submitPt[1])
+            mouse.click()
+            self.replayGame()
+            return
         
         for y in range(self.gameState.boardDim.y):
             for x in range(self.gameState.boardDim.x):
@@ -132,6 +146,24 @@ class GameInterface:
         absY = self.boardOffset.y + boardPt.y * PIECE_OFFSET.y + PIECE_OFFSET.y / 2
         
         return Point(absX, absY)
+    
+    def replayGame(self):
+        replayPt = None
+        
+        while replayPt == None:
+            bmp = bitmap.capture_screen()
+            replayPt = bmp.find_bitmap(self.replayImg)
+        
+        mouse.move(replayPt[0], replayPt[1])
+        mouse.click()
+        
+        time.sleep(2)
+        mouse.move(self.gameOffset.x + GAME_SIZE.x / 2, self.gameOffset.y + GAME_SIZE.y / 2)
+        mouse.click()
+        
+        time.sleep(2)
+        mouse.move(self.gameOffset.x + 100, self.gameOffset.y + 100)
+        mouse.click()
 
 
 if __name__ == '__main__':
