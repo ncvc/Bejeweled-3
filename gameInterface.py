@@ -103,16 +103,21 @@ class GameInterface:
         return color
 
     # Click and drag the mouse to make a move - takes a tuple of board coordinates
+    # Attempts to place the cursor back where it found it
     def makeMove(self, move):
         firstPt, secondPt = move
         
         absFirst = self.boardToAbsPt(firstPt)
         absSecond = self.boardToAbsPt(secondPt)
         
+        (lastX, lastY) = mouse.getpos()
+        
         mouse.move(absFirst.x, absFirst.y)
         mouse.toggle(True)
         mouse.move(absSecond.x, absSecond.y)
         mouse.toggle(False)
+        
+        mouse.move(lastX, lastY)
     
     # Move mouse off the board
     def moveOffBoard(self):

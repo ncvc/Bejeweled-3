@@ -2,7 +2,7 @@ import gameInterface
 import gameState
 import AI
 import time
-import msvcrt
+from autopy import mouse
 
 class Bot:
     def __init__(self):
@@ -12,7 +12,7 @@ class Bot:
     
     def start(self):
         time.sleep(2)
-        while self.gameState.gameOver != True and not msvcrt.kbhit():
+        while self.gameState.gameOver != True and mouse.get_pos() != (0, 0):
             self.gameState = self.gameInterface.readGame()
             move = self.ai.determineMove(self.gameState.board)
 
