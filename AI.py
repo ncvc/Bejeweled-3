@@ -113,42 +113,42 @@ class AI:
                 #oX 4,1
                 if self.colorsMatch(gem1, gem2, gem6):
                     self.moves.append(Move(gem3.point, gem6.point, 3))
-                    checkSixGemVerticalFivePointMove(gem3, gem6)
+                    self.checkSixGemVerticalFivePointMove(gem3, gem6)
 
                 #oX 6,3
                 #Xo 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem3, gem4, gem5):
                     self.moves.append(Move(gem3.point, gem6.point, 3))
-                    checkSixGemVerticalFivePointMove(gem6, gem3)
+                    self.checkSixGemVerticalFivePointMove(gem6, gem3)
                 
                 #Xo 6,3
                 #oX 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem2, gem4, gem6):
                     self.moves.append(Move(gem2.point, gem5.point, 3))
-                    checkSixGemVerticalFivePointMove(gem5, gem2)
+                    self.checkSixGemVerticalFivePointMove(gem5, gem2)
                 
                 #oX 6,3
                 #Xo 5,2
                 #oX 4,1
                 if self.colorsMatch(gem1, gem3, gem5):
                     self.moves.append(Move(gem2.point, gem5.point, 3))
-                    checkSixGemVerticalFivePointMove(gem2, gem5)
+                    self.checkSixGemVerticalFivePointMove(gem2, gem5)
                 
                 #oX 6,3
                 #oX 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem2, gem3, gem4):
                     self.moves.append(Move(gem1.point, gem4.point, 3))
-                    checkSixGemVerticalFivePointMove(gem1, gem4)
+                    self.checkSixGemVerticalFivePointMove(gem1, gem4)
                 
                 #Xo 6,3
                 #Xo 5,2
                 #oX 4,1
                 if self.colorsMatch(gem1, gem5, gem6):
                     self.moves.append(Move(gem1.point, gem4.point, 3))
-                    checkSixGemVerticalFivePointMove(gem4, gem1)
+                    self.checkSixGemVerticalFivePointMove(gem4, gem1)
                     
         return self.bestMove()
 
