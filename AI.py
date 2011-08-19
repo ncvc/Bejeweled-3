@@ -142,6 +142,8 @@ class AI:
                 #oX 4,1
                 if self.colorsMatch(gem1, gem5, gem6):
                     moves.append(Move(gem1.point, gem4.point, 3))
+                    
+        bestMove()
 
 
         
@@ -167,13 +169,13 @@ class AI:
             return false
 
     def bestMove():
-        twoToSwap = None
+        move = None
         maxScore = 0
         for item in self.moves:
-            if item.score > maxScore or twoSwap == None:
-                twoToSwap = (item.point1, item.point2)
+            if item.score > maxScore or move == None:
+                move = item
                 maxScore = item.score
-        return twoToSwap
+        return move
             
         
     def __init__(self):
