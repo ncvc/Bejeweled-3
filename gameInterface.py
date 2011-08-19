@@ -25,9 +25,13 @@ BOARD_OFFSET = Point(198, 60)
 PIECE_OFFSET = Point(47, 47)
 
 # Color constants
-WHITE = RGB(232, 232, 232)
-BLUE = RGB(12, 120, 235)
-ORANGE = RGB(242, 155, 65)
+COLOR_CONSTANTS = {'white':     RGB(232, 232, 232),
+                   'blue':      RGB(12, 120, 235),
+                   'orange':    RGB(242, 155, 65),
+                   'yellow':    RGB(253, 240, 33),
+                   'red':       RGB(247, 27, 56),
+                   'purple':    RGB(215, 20, 215),
+                   'green':     RGB(37, 205, 70)}
 
 class GameInterface:
     # Takes boardDim, a Point representing the board dimensions (8x8 board is represented by Point(8,8))
