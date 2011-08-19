@@ -8,8 +8,9 @@ class Gem:
         return 'Gem(%s, %s, %s)' % (self.color, self.status, self.point)
 
 class GameState:
-    def __init__(self):
+    def __init__(self, boardDim):
         self.gameOver = False
+        self.boardDim = boardDim
         self.board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
         
         self.level = 0
@@ -92,3 +93,6 @@ class Move:
 
     def pointTuple(self):
         return (self.point1, self.point2)
+    
+    def __repr__(self):
+        return 'Move(%s, %s, %i)' % (self.point1, self.point2, self.score)

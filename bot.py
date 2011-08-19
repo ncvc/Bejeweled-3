@@ -6,18 +6,22 @@ from autopy import alert
 
 class Bot:
     def __init__(self):
+        boardDim = gameState.Point(8,8)
+        
         self.ai = AI.AI()
-        self.gameInterface = gameInterface.GameInterface(gameState.Point(8,8))
-        self.gameState = gameState.GameState()
+        self.gameInterface = gameInterface.GameInterface(boardDim)
+        self.gameState = gameState.GameState(boardDim)
     
     def start(self):
         time.sleep(2)
         while self.gameState.gameOver != True:
+            time.sleep(1)
             if self.gameInterface.isMouseOnGame():
                 if alert.alert('Paused', 'Quit?'):
                     break
                 
             self.gameState = self.gameInterface.readGame()
+            
             move = self.ai.determineMove(self.gameState.board)
 
             if move == None:

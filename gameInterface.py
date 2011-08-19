@@ -41,9 +41,7 @@ class GameInterface:
         
         self.gemImgs = {}
         
-        self.boardDim = boardDim
-        
-        self.gameState = GameState()
+        self.gameState = GameState(boardDim)
         
         self.calibrate()
     
@@ -61,8 +59,8 @@ class GameInterface:
     def readGame(self):
         bmp = bitmap.capture_screen()
         
-        for y in range(self.boardDim.y):
-            for x in range(self.boardDim.x):
+        for y in range(self.gameState.boardDim.y):
+            for x in range(self.gameState.boardDim.x):
                 gem = self.getGem(bmp, Point(x, y))
                 self.gameState.board[y][x] = gem
                 
