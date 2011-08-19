@@ -69,3 +69,11 @@ class RGB:
 
     def distSquared(self, other):
         return (self.r-other.r)**2+(self.g-other.g)**2+(self.b-other.b)**2
+
+class Move:
+    def __init__(self, point1, point2, score):
+        self.point1 = point1
+        self.point2 = point2
+        self.score = score
+    def pointTuple
+        return (self.point1, self.point2)
