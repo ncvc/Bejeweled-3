@@ -66,3 +66,6 @@ class RGB:
     
     def __repr__(self):
         return 'RGB(%i, %i, %i)' % (self.r, self.g, self.b)
+
+    def distSquared(self, other):
+        return (self.r-other.r)**2+(self.g-other.g)**2+(self.b-other.b)**2

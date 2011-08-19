@@ -102,6 +102,16 @@ class GameInterface:
         print total'''
         
         return avg
+
+    # Determines color of RGB value
+    def color(self, RGB):
+        minDistance = 9999999;
+        color = 'none'
+        for key, value in COLOR_CONSTANTS.items():
+            if RGB.distSqrd(value) < minDistance:
+                color = key
+                mindistance = RGB.distSqrd()
+            
     
     # Loads all gem images into self.gemImgs, with the filename as the key
     def loadGems(self):
