@@ -67,36 +67,37 @@ class AI:
                 #XXo 1,2,3
                 if self.colorsMatch(gem1, gem2, gem6):
                     moves.append(Move(gem3.point, gem6.point, 3))
-                    checkHorizontalSixL(gem3, gem6)
+                    checkSixGemHorizontalFivePointMove(gem3, gem6)
 
                 #XXo 4,5,6
                 #ooX 1,2,3
                 if self.colorsMatch(gem3, gem4, gem5):
                     moves.append(Move(gem3.point, gem6.point, 3))
-                    checkHorizontalSixL(gem3, gem6)
+                    checkSixGemHorizontalFivePointMove(gem3, gem6)
 
                 #XoX 4,5,6
                 #oXo 1,2,3
                 if self.colorsMatch(gem2, gem4, gem6):
                     moves.append(Move(gem2.point, gem5.point, 3))
-                    
+                    checkSixGemHorizontalFivePointMove(gem2, gem5)
 
                 #oXo 4,5,6
                 #XoX 1,2,3
                 if self.colorsMatch(gem1, gem3, gem5):
                     moves.append(Move(gem2.point, gem5.point, 3))
+                    checkSixGemHorizontalFivePointMove(gem2, gem5)
 
                 #Xoo 4,5,6
                 #oXX 1,2,3
                 if self.colorsMatch(gem2, gem3, gem4):
                     moves.append(Move(gem1.point, gem4.point, 3))
-                    checkHorizontalSixL(gem1, gem4)
+                    checkSixGemHorizontalFivePointMove(gem1, gem4)
 
                 #oXX 4,5,6
                 #Xoo 1,2,3
                 if self.colorsMatch(gem1, gem5, gem6):
                     moves.append(Move(gem1.point, gem4.point, 3))
-                    checkHorizontalSixL(gem1, gem4)
+                    checkSixGemHorizontalFivePointMove(gem1, gem4)
                 
         for i in range (width-1):
             for j in range(height - 2):
@@ -152,7 +153,7 @@ class AI:
         return gem1.color == gem2.color == gem3.color
 
 
-    def checkHorizontalSixL(throwAwayGem, movingGem):
+    def checkSixGemHorizontalFivePointMove(throwAwayGem, movingGem):
         directionFactor = throwAwayGem.point.y - movingGem.point.y
         x = throwAwayGem.point.x
         y = throwAwayGem.point.y
