@@ -27,7 +27,6 @@ class AI:
                 #XXoX, X's are same color, o's are any other color
                 if self.colorsMatch(gem1, gem2, gem4):
                     moves.append(Move(gem3.point, gem4.point, 3))
-                    checkLRightThenUpOrDown(gem1, gem2, gem3, gem4)
                     
                 #XoXX
                 if self.colorsMatch(gem1, gem3, gem4):
