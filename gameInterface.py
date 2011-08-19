@@ -66,12 +66,15 @@ class GameInterface:
         bmp = bitmap.capture_screen()
         
         submitPt = bmp.find_bitmap(self.submitImg)
+        replayPt = bmp.find_bitmap(self.replayImg)
         
-        if submitPt != None:
-            mouse.move(submitPt[0], submitPt[1])
-            mouse.click()
+        if submitPt != None or replayPt != None:
+            if submitPt != None:
+                print 'submit found!'
+                mouse.move(submitPt[0], submitPt[1])
+                mouse.click()
             self.replayGame()
-            return
+            return self.gameState
         
         for y in range(self.gameState.boardDim.y):
             for x in range(self.gameState.boardDim.x):
@@ -148,7 +151,10 @@ class GameInterface:
         return Point(absX, absY)
     
     def replayGame(self):
+        print 'replay!!!'
         replayPt = None
+        
+        time.sleep(5)
         
         while replayPt == None:
             bmp = bitmap.capture_screen()
@@ -157,7 +163,7 @@ class GameInterface:
         mouse.move(replayPt[0], replayPt[1])
         mouse.click()
         
-        time.sleep(2)
+        time.sleep(60)
         mouse.move(self.gameOffset.x + GAME_SIZE.x / 2, self.gameOffset.y + GAME_SIZE.y / 2)
         mouse.click()
         
@@ -167,7 +173,7 @@ class GameInterface:
 
 
 if __name__ == '__main__':
-    time.sleep(2)
+    #time.sleep(2)
     gi = GameInterface(Point(8, 8))
     
-    print gi.readGame()
+    print gi.replayGame()

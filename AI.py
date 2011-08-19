@@ -8,6 +8,7 @@ class AI:
 
     #takes a board and returns a tuple of two points that should be switched
     def determineMove(self, board):
+        self.board = board
         self.height = len(board)
         if self.height < 4:
             print "invalid board"
@@ -170,7 +171,7 @@ class AI:
             self.moves.append(Move(throwAwayGem.point, movingGem.point, 5))
 
     def checkSixGemVerticalFivePointMove(self, throwAwayGem, movingGem):
-        directionFactor = throwAwayGem.Point.x - movingGem.point.x
+        directionFactor = throwAwayGem.point.x - movingGem.point.x
         x = throwAwayGem.point.x
         y = throwAwayGem.point.y
         if self.gemAtCoords(x + 2*(directionFactor), y) and \
@@ -181,7 +182,7 @@ class AI:
         
 
     def gemAtCoords(self, x, y):
-        if x < self.width and x > 0 and y < self.height and y > self.height:
+        if x < self.width and x > 0 and y < self.height and y > 0:
             return self.board[y][x]
         else:
             return False
@@ -198,3 +199,4 @@ class AI:
         
     def __init__(self):
         self.moves = []
+        self.board = []

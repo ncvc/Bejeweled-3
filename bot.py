@@ -16,7 +16,6 @@ class Bot:
         time.sleep(2)
         
         while self.gameState.gameOver != True:
-            time.sleep(1)
             if self.gameInterface.isMouseOnGame():
                 if alert.alert('Paused', 'Quit?'):
                     break
@@ -26,7 +25,7 @@ class Bot:
             move = self.ai.determineMove(self.gameState.board)
 
             if move == None:
-                print self.gameState.board
+                print 'No move!'#self.gameState.board
             else:
                 self.gameInterface.makeMove(move)
                 
