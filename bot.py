@@ -2,19 +2,28 @@ import gameInterface
 import gameState
 import AI
 import time
+import msvcrt
 
 class Bot:
     def __init__(self):
         self.ai = AI.AI()
-        self.gameInterface = gameInterface.GameInterface()
+        self.gameInterface = gameInterface.GameInterface(gameState.Point(8,8))
         self.gameState = gameState.GameState()
     
     def start(self):
-        while self.gameState.gameOver != True:
-            time.sleep(2)
+        time.sleep(2)
+        while self.gameState.gameOver != True and not msvcrt.kbhit():
             self.gameState = self.gameInterface.readGame()
             move = self.ai.determineMove(self.gameState.board)
-            self.gameInterface.makeMove(move)
+
+            if move == None:
+                print self.gameState.board
+            else:
+                self.gameInterface.makeMove(move)
+                
+            self.gameInterface.moveOffBoard()
+        
+        print 'done!'
         
         return self.gameState
 

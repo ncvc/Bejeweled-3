@@ -46,7 +46,6 @@ class GameInterface:
         self.gameState = GameState()
         
         self.calibrate()
-        self.loadGems()
     
     # Sets the location of the top left of the board - all other points are represented relative to the gameOffset
     def calibrate(self):
@@ -57,20 +56,17 @@ class GameInterface:
         
         self.gameOffset = Point(x, y) + GAME_OFFSET
         self.boardOffset = self.gameOffset + BOARD_OFFSET
-        mouse.move(self.boardOffset.x, self.boardOffset.y)
     
     # Reads the board from the screen and returns a GameState
     def readGame(self):
-        board = []
+        board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
         bmp = bitmap.capture_screen()
-        f = open('lol.txt', 'w')
-        for x in range(self.boardDim.x):
-            for y in range(self.boardDim.y):
+        
+        for y in range(self.boardDim.y):
+            for x in range(self.boardDim.x):
                 gem = self.getGem(bmp, Point(x, y))
-                print gem
-                f.write(str(gem) + ' ')
-            f.write('\n')
-        f.close()
+                board[y][x] = gem
+                
         self.gameState.board = board
         
         return self.gameState
@@ -81,7 +77,6 @@ class GameInterface:
         halfSize = 5
         total = 0
         totalColor = RGB()
-        colors = []
         
         for x in range(absPt.x - halfSize, absPt.x + halfSize):
             for y in range(absPt.y - halfSize, absPt.y + halfSize):
@@ -91,30 +86,20 @@ class GameInterface:
                 
                 totalColor += rgb
                 total += 1
-                colors.append(rgb)
-                #mouse.move(x, y)
-                #time.sleep(.01)
+                
+        avgRGB = totalColor / total
+        gemColor = self.RGBToGem(avgRGB)
         
-        avg = totalColor / total
-        lol = '''mult = .5
-        total = totalColor = 0
-        for color in colors:
-            if color < avg * (1 + mult) and color > avg * (1 - mult):
-                total += 1
-                totalColor += color
-        
-        print total'''
-        
-        return avg
+        return Gem(gemColor, 'status', point)
 
     # Determines color of RGB value
-    def color(self, RGB):
-        minDistance = 9999999;
+    def RGBToGem(self, RGB):
+        minDistance = None;
         color = 'none'
         for key, value in COLOR_CONSTANTS.items():
-            if RGB.distSqrd(value) < minDistance:
+            if RGB.distSquared(value) < minDistance or minDistance == None:
                 color = key
-                minDistance = RGB.distSqrd(value)
+                minDistance = RGB.distSquared(value)
         return color
 
     # Click and drag the mouse to make a move - takes a tuple of board coordinates
@@ -128,6 +113,10 @@ class GameInterface:
         mouse.toggle(True)
         mouse.move(absSecond.x, absSecond.y)
         mouse.toggle(False)
+    
+    # Move mouse off the board
+    def moveOffBoard(self):
+        mouse.move(self.gameOffset.x, self.gameOffset.y)
 
     # Converts board coordinates to absolute screen coordinates (the center of the tile)
     def boardToAbsPt(self, boardPt):

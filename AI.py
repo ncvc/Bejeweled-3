@@ -14,7 +14,7 @@ class AI:
         if width < 4:
             print "invalid board"
             return
-        print board
+            
         for i in range(height):
             for j in range(width - 3):
                 gem1 = board[height-1-i][j]
@@ -99,8 +99,6 @@ class AI:
                 gem4 = board[height-j-1][i+1]
                 gem5 = board[height-j-2][i+1]
                 gem6 = board[height-j-3][i+1]
-
-                print gem1, gem2, gem3, gem4, gem5, gem6
 
                 #Xo 6,3
                 #oX 5,2
