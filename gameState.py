@@ -30,5 +30,39 @@ class Point:
     def __sub__(self, other):
         return Point(self.x - other.x, self.y - other.y)
     
+    # Multiplication by a constant
+    def __mul__(self, other):
+        return Point(self.x * other, self.y * other)
+    
+    # Division by a constant
+    def __div__(self, other):
+        return Point(self.x / other, self.y / other)
+    
     def __repr__(self):
         return 'Point(%i, %i)' % (self.x, self.y)
+        
+class RGB:
+    def __init__(self, r=0, g=0, b=0):
+        self.r = r
+        self.g = g
+        self.b = b
+        
+    def toTuple(self):
+        return (self.r, self.g, self.b)
+    
+    def __add__(self, other):
+        return RGB(self.r + other.r, self.g + other.g, self.b + other.b)
+    
+    def __sub__(self, other):
+        return RGB(self.r - other.r, self.g - other.g, self.b - other.b)
+    
+    # Multiplication by a constant
+    def __mul__(self, other):
+        return RGB(self.r * other, self.g * other, self.b * other)
+    
+    # Division by a constant
+    def __div__(self, other):
+        return RGB(self.r / other, self.g / other, self.b / other)
+    
+    def __repr__(self):
+        return 'RGB(%i, %i, %i)' % (self.r, self.g, self.b)
