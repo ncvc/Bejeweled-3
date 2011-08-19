@@ -2,7 +2,7 @@ import gameInterface
 import gameState
 import AI
 import time
-from autopy import mouse, alert
+from autopy import alert
 
 class Bot:
     def __init__(self):

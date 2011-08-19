@@ -10,11 +10,25 @@ class Gem:
 class GameState:
     def __init__(self):
         self.gameOver = False
-        self.board = []
+        self.board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
         
         self.level = 0
         self.score = 0
         self.percentComplete = 0
+    
+    def makeMove(self, move):
+        self.swapGems(move)
+        self.removeMatches()
+    
+    def swapGems(self, move):
+        pt1, pt2 = move.pointTuple()
+        
+        temp = self.board[pt1.y][pt1.x]
+        self.board[pt1.y][pt1.x] = self.board[pt2.y][pt2.x]
+        self.board[pt2.y][pt2.x] = temp
+    
+    def removeMatches(self):
+        pass
 
 class Point:
     def __init__(self, x=0, y=0):

@@ -59,16 +59,13 @@ class GameInterface:
     
     # Reads the board from the screen and returns a GameState
     def readGame(self):
-        board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
         bmp = bitmap.capture_screen()
         
         for y in range(self.boardDim.y):
             for x in range(self.boardDim.x):
                 gem = self.getGem(bmp, Point(x, y))
-                board[y][x] = gem
+                self.gameState.board[y][x] = gem
                 
-        self.gameState.board = board
-        
         return self.gameState
     
     def getGem(self, bmp, point):
@@ -102,10 +99,12 @@ class GameInterface:
                 minDistance = RGB.distSquared(value)
         return color
 
-    # Click and drag the mouse to make a move - takes a tuple of board coordinates
+    # Click and drag the mouse to make a move - takes a Move object
     # Attempts to place the cursor back where it found it
     def makeMove(self, move):
-        firstPt, secondPt = move
+        self.gameState.makeMove(move)
+        
+        firstPt, secondPt = move.pointTuple()
         
         absFirst = self.boardToAbsPt(firstPt)
         absSecond = self.boardToAbsPt(secondPt)
@@ -126,7 +125,8 @@ class GameInterface:
     def isMouseOnGame(self):
         (x, y) = mouse.get_pos()
         
-        return x > self.gameOffset.x and x < self.gameOffset.x + GAME_SIZE.x and y > self.gameOffset.y and y < self.gameOffset.y + GAME_SIZE.y
+        #return x > self.gameOffset.x and x < self.gameOffset.x + GAME_SIZE.x and y > self.gameOffset.y and y < self.gameOffset.y + GAME_SIZE.y
+        return x > self.gameOffset.x and x < self.gameOffset.x + 10 and y > self.gameOffset.y and y < self.gameOffset.y + 10
 
     # Converts board coordinates to absolute screen coordinates (the center of the tile)
     def boardToAbsPt(self, boardPt):
