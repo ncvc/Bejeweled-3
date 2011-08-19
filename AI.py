@@ -73,13 +73,13 @@ class AI:
                 #ooX 1,2,3
                 if self.colorsMatch(gem3, gem4, gem5):
                     self.moves.append(Move(gem3.point, gem6.point, 3))
-                    self.checkSixGemHorizontalFivePointMove(gem3, gem6)
+                    self.checkSixGemHorizontalFivePointMove(gem6, gem3)
 
                 #XoX 4,5,6
                 #oXo 1,2,3
                 if self.colorsMatch(gem2, gem4, gem6):
                     self.moves.append(Move(gem2.point, gem5.point, 3))
-                    self.checkSixGemHorizontalFivePointMove(gem2, gem5)
+                    self.checkSixGemHorizontalFivePointMove(gem5, gem2)
 
                 #oXo 4,5,6
                 #XoX 1,2,3
@@ -97,7 +97,7 @@ class AI:
                 #Xoo 1,2,3
                 if self.colorsMatch(gem1, gem5, gem6):
                     self.moves.append(Move(gem1.point, gem4.point, 3))
-                    self.checkSixGemHorizontalFivePointMove(gem1, gem4)
+                    self.checkSixGemHorizontalFivePointMove(gem4, gem1)
                 
         for i in range (self.width-1):
             for j in range(self.height - 2):
@@ -113,36 +113,42 @@ class AI:
                 #oX 4,1
                 if self.colorsMatch(gem1, gem2, gem6):
                     self.moves.append(Move(gem3.point, gem6.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem3, gem6)
 
                 #oX 6,3
                 #Xo 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem3, gem4, gem5):
                     self.moves.append(Move(gem3.point, gem6.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem6, gem3)
                 
                 #Xo 6,3
                 #oX 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem2, gem4, gem6):
                     self.moves.append(Move(gem2.point, gem5.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem5, gem2)
                 
                 #oX 6,3
                 #Xo 5,2
                 #oX 4,1
                 if self.colorsMatch(gem1, gem3, gem5):
                     self.moves.append(Move(gem2.point, gem5.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem2, gem5)
                 
                 #oX 6,3
                 #oX 5,2
                 #Xo 4,1
                 if self.colorsMatch(gem2, gem3, gem4):
                     self.moves.append(Move(gem1.point, gem4.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem1, gem4)
                 
                 #Xo 6,3
                 #Xo 5,2
                 #oX 4,1
                 if self.colorsMatch(gem1, gem5, gem6):
                     self.moves.append(Move(gem1.point, gem4.point, 3))
+                    self.checkSixGemVerticalFivePointMove(gem4, gem1)
                     
         return self.bestMove()
 
@@ -162,6 +168,17 @@ class AI:
         self.gemAtCoords(x, y + 1*(directionFactor)).color == \
         self.gemAtCoords(x, y + 2*(directionFactor)).color:
             self.moves.append(Move(throwAwayGem.point, movingGem.point, 5))
+
+    def checkSixGemVerticalFivePointMove(self, throwAwayGem, movingGem):
+        directionFactor = throwAwayGem.Point.x - movingGem.point.x
+        x = throwAwayGem.point.x
+        y = throwAwayGem.point.y
+        if self.gemAtCoords(x + 2*(directionFactor), y) and \
+        movingGem.color == \
+        self.gemAtCoords(x + 1*(directionFactor), y).color == \
+        self.gemAtCoords(x + 2*(directionFactor), y).color:
+            self.moves.append(Move(throwAwayGem.point, movingGem.point, 5))
+        
 
     def gemAtCoords(self, x, y):
         if x < self.width and x > 0 and y < self.height and y > self.height:
