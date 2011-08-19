@@ -114,16 +114,9 @@ class GameInterface:
         for key, value in COLOR_CONSTANTS.items():
             if RGB.distSqrd(value) < minDistance:
                 color = key
-                mindistance = RGB.distSqrd()
-            
-    
-    # Loads all gem images into self.gemImgs, with the filename as the key
-    def loadGems(self):
-        files = os.listdir(GEM_DIR)
-        
-        for fileName in files:
-            self.gemImgs[fileName] = bitmap.Bitmap.open(os.path.join(GEM_DIR, fileName))
-    
+                minDistance = RGB.distSqrd(value)
+        return color
+
     # Click and drag the mouse to make a move - takes a tuple of board coordinates
     def makeMove(self, move):
         firstPt, secondPt = move
