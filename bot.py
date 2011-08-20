@@ -4,6 +4,8 @@ import AI
 import time
 from autopy import alert
 
+# Contains an AI which interacts with the game via a GameInterface. The state
+# is represented by a GameState
 class Bot:
     def __init__(self):
         boardDim = gameState.Point(8,8)
@@ -12,6 +14,7 @@ class Bot:
         self.gameInterface = gameInterface.GameInterface(boardDim)
         self.gameState = gameState.GameState(boardDim)
     
+    # Begins a playing a game
     def start(self):
         time.sleep(2)
         
@@ -35,7 +38,7 @@ class Bot:
         
         return self.gameState
         
-
+# Main method just to start a game
 def main():
     bot = Bot()
     

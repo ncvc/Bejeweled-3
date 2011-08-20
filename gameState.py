@@ -1,3 +1,4 @@
+# Represents a Gem on the board
 class Gem:
     def __init__(self, color, status, point):
         self.color = color
@@ -7,6 +8,7 @@ class Gem:
     def __repr__(self):
         return 'Gem(%s, %s, %s)' % (self.color, self.status, self.point)
 
+# Represents the state of the game, including the board, score, and level
 class GameState:
     def __init__(self, boardDim):
         self.gameOver = False
@@ -31,6 +33,7 @@ class GameState:
     def removeMatches(self):
         pass
 
+# Represents a 2D point
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -55,7 +58,8 @@ class Point:
     
     def __repr__(self):
         return 'Point(%i, %i)' % (self.x, self.y)
-        
+
+# Represents an RGB value as a 3D vector
 class RGB:
     def __init__(self, r=0, g=0, b=0):
         self.r = r
@@ -85,6 +89,7 @@ class RGB:
     def distSquared(self, other):
         return (self.r-other.r)**2+(self.g-other.g)**2+(self.b-other.b)**2
 
+# Represents a move the player can make
 class Move:
     def __init__(self, point1, point2, score):
         self.point1 = point1

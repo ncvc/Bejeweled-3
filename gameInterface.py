@@ -36,6 +36,7 @@ COLOR_CONSTANTS = {'white':     RGB(232, 232, 232),
                    'purple':    RGB(215, 20, 215),
                    'green':     RGB(37, 205, 70)}
 
+# Provides an abstract way to interact with the game
 class GameInterface:
     # Takes boardDim, a Point representing the board dimensions (8x8 board is represented by Point(8,8))
     def __init__(self, boardDim):
@@ -83,6 +84,7 @@ class GameInterface:
                 
         return self.gameState
     
+    # Returns a Gem given a screenshot and board coordinates
     def getGem(self, bmp, point):
         absPt = self.boardToAbsPt(point)
         
@@ -104,7 +106,7 @@ class GameInterface:
         
         return Gem(gemColor, 'status', point)
 
-    # Determines color of RGB value
+    # Finds the gem color closest to the given RGB value
     def RGBToGem(self, RGB):
         minDistance = None;
         color = 'none'
@@ -137,7 +139,8 @@ class GameInterface:
     def moveOffBoard(self):
         mouse.move(self.gameOffset.x - 10, self.gameOffset.y - 10)
     
-    def isMouseOnGame(self):
+    # Returns True if the mouse is in the exit box (10x10 pix block at the top left of the game)
+    def isMouseAtExit(self):
         (x, y) = mouse.get_pos()
         
         #return x > self.gameOffset.x and x < self.gameOffset.x + GAME_SIZE.x and y > self.gameOffset.y and y < self.gameOffset.y + GAME_SIZE.y
