@@ -13,16 +13,43 @@ class GameState:
     def __init__(self, boardDim):
         self.gameOver = False
         self.boardDim = boardDim
-        self.board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
+        
+        self.board = Board(boardDim)
         
         self.level = 0
         self.score = 0
         self.percentComplete = 0
     
+    # Updates the board to reflect the given move and adds to the total score
+    def makeMove(self, move):
+        self.score += self.board.makeMove(move)
+    
+    # Returns the current level
+    def getLevel(self):
+        return self.level
+    
+    # Returns the total score
+    def getScore(self):
+        return self.score
+    
+    # Returns the percent complete as a decimal
+    def getCompletion(self):
+        return self.percentComplete
+
+# Represents the game board as a list of lists containing Gem objects
+class Board:
+    def __init__(self, boardDim):
+        self.board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
+            
+    # Updates the board to reflect the given move, including removing gems
+    # and making them 'fall' into empty spaces. New unknown gems are
+    # represented by None
     def makeMove(self, move):
         self.swapGems(move)
-        self.removeMatches()
-    
+        return self.removeMatches()
+        
+    # Updates the board to represent just the swapping of two Gems without
+    # removing any matches
     def swapGems(self, move):
         pt1, pt2 = move.pointTuple()
         
@@ -30,6 +57,9 @@ class GameState:
         self.board[pt1.y][pt1.x] = self.board[pt2.y][pt2.x]
         self.board[pt2.y][pt2.x] = temp
     
+    # Removes any matches, placing special Gems in case of L, T, or 4- or
+    # 5-in-a-row
+    # Returns the number of points gained
     def removeMatches(self):
         pass
 
