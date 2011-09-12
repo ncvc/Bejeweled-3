@@ -1,4 +1,5 @@
-from gameState import Move
+from gameState import Move, Point
+import copy, time
 
 class AI:
     
@@ -6,10 +7,58 @@ class AI:
     #boardNotWideEnough = [[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15],[16,17,18]]
     #boardNotTallEnough = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
 
-    #takes a board and returns a tuple of two points that should be switched
+    # Constructor - takes the board dimesion as a Point and the number of moves to look ahead when calculating the best move
+    def __init__(self, boardDim, depth):
+        self.moves = self.getAllPossibleMoves(boardDim)
+        self.depth = depth
+        
+    # Returns a list of all possible moves given a point representing the dimesions of the board
+    def getAllPossibleMoves(self, boardDim):
+        dirs = (Point(1,0), Point(0,1))
+        moves = []
+        for x in range(boardDim.x):
+            for y in range(boardDim.y):
+                p1 = Point(x, y)
+                for direction in dirs:
+                    moves.append(Move(p1, p1 + direction, 0))
+        
+        return moves
+        
+    # Takes a board and returns a Move
     def determineMove(self, board):
-        self.board = board
-        self.height = len(board)
+        startTime = time.time()
+        points, move, matches = self.getBestMove(board, 0, 1)
+        totalTime = time.time() - startTime
+        move.score = points
+        
+        print 'Best move calculated in %i! %i projected points earned in the next %i turns with %i matches' % (totalTime, points, self.depth, matches)
+        
+        return move
+        
+    def getBestMove(self, board, totalPoints, moveNum):
+        bestMove = None
+        maxPoints = -1
+        matches = 0
+        print 'moveNum:', moveNum
+        
+        for move in self.moves:
+            # Dont't want to affect the actual board while simulating moves
+            newBoard = copy.deepcopy(board)
+            
+            points, numMatches = newBoard.makeMove(move)
+            
+            if points > 0 and moveNum < self.depth:
+                points, move = self.getBestMove(newBoard, totalPoints + points, moveNum + 1)
+            
+            if maxPoints < totalPoints + points:
+                bestMove = move
+                maxPoints = totalPoints + points
+                matches = numMatches
+        
+        return maxPoints, bestMove, matches
+                
+        
+    '''
         if self.height < 4:
             print "invalid board"
             return
@@ -195,8 +244,6 @@ class AI:
                 move = item
                 maxScore = item.score
         return move
+        '''
             
         
-    def __init__(self):
-        self.moves = []
-        self.board = []

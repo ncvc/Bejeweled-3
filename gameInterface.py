@@ -1,4 +1,4 @@
-from autopy import mouse, alert, bitmap, color
+from autopy import mouse, bitmap, color
 from gameState import Point, GameState, Gem, RGB
 import time
 import os
@@ -80,7 +80,7 @@ class GameInterface:
         for y in range(self.gameState.boardDim.y):
             for x in range(self.gameState.boardDim.x):
                 gem = self.getGem(bmp, Point(x, y))
-                self.gameState.board[y][x] = gem
+                self.gameState.board.board[y][x] = gem
                 
         return self.gameState
     

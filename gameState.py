@@ -6,7 +6,7 @@ class Gem:
         self.point = point
     
     def __repr__(self):
-        return 'Gem(%s, %s, %s)' % (self.color, self.status, self.point)
+        return 'Gem(\'%s\', \'%s\', %s)' % (self.color, self.status, self.point)
 
 # Represents the state of the game, including the board, score, and level
 class GameState:
@@ -22,7 +22,8 @@ class GameState:
     
     # Updates the board to reflect the given move and adds to the total score
     def makeMove(self, move):
-        self.score += self.board.makeMove(move)
+        score, matches = self.board.makeMove(move)
+        self.score += score
     
     # Returns the current level
     def getLevel(self):
@@ -41,10 +42,10 @@ class Board:
     def __init__(self, boardDim):
         self.boardDim = boardDim
         self.board = [[None for x in range(self.boardDim.x)] for y in range(self.boardDim.y)]
-        self.matchTypes = {'5 consecutive': self.getMatch5,
-                           'L or T': self.getMatchLT,
-                           '4 consecutive': self.getMatch4,
-                           '3 consecutive': self.getMatch3}
+        self.matchTypes = {'5 consecutive': (self.getMatch5, 500),
+                           'L or T': (self.getMatchLT, 150),
+                           '4 consecutive': (self.getMatch4, 100),
+                           '3 consecutive': (self.getMatch3, 50)}
             
     # Updates the board to reflect the given move, including removing gems
     # and making them 'fall' into empty spaces. New unknown gems are
@@ -52,7 +53,18 @@ class Board:
     # Returns the number of points gained
     def makeMove(self, move):
         self.swapGems(move)
-        return self.removeMatches()
+        
+        points = 1
+        totalPoints = 0
+        numMatches = -1
+        
+        while points > 0:
+            numMatches += 1
+            points = self.removeMatches()
+            self.dropGems()
+            totalPoints += points
+        
+        return totalPoints, numMatches
         
     # Updates the board to represent just the swapping of two Gems without
     # removing any matches
@@ -60,16 +72,37 @@ class Board:
         pt1, pt2 = move.pointTuple()
         
         if self.isOnBoard(pt1) and self.isOnBoard(pt2):
-            temp = self.board[pt1.y][pt1.x]
-            self.board[pt1.y][pt1.x] = self.board[pt2.y][pt2.x]
-            self.board[pt2.y][pt2.x] = temp
+            gem1 = self.board[pt1.y][pt1.x]
+            gem2 = self.board[pt2.y][pt2.x]
+            
+            if gem1 != None:
+                gem1.point = pt2
+            if gem2 != None:
+                gem2.point = pt1
+                
+            self.board[pt2.y][pt2.x] = gem1
+            self.board[pt1.y][pt1.x] = gem2
+    
+    # Causes all the gems to obey gravity
+    def dropGems(self):
+        for x in range(self.boardDim.x):
+            for y in range(1, self.boardDim.y):
+                if self.board[y][x] == None:
+                    for newY in range(y - 1, -1, -1):
+                        gem = self.board[newY][x]
+                        if gem != None:
+                            gem.point = Point(x, newY + 1)
+                        
+                        self.board[newY + 1][x] = gem
+                    self.board[0][x] = None
     
     # Removes any matches, placing special Gems in case of L, T, or 4- or
     # 5-in-a-row
     # Returns the number of points gained
     def removeMatches(self):
-        for matchName, matchFunc in self.matchTypes:
-            print 'Searching for matches of type: %s' % matchName
+        totalPoints = 0
+        for matchName, (matchFunc, matchPoints) in self.matchTypes.items():
+            #print 'Searching for matches of type: %s' % matchName
             
             for x in range(self.boardDim.x):
                 for y in range(self.boardDim.y):
@@ -78,41 +111,44 @@ class Board:
                     if gem != None:
                         match = matchFunc(gem)
                         
-                        # Remove all Gems that 
-                        for gem in match.matchedGems:
-                            self.board[gem.point.y][gem.point.x] = None
-                        
-                        pt = match.replaceGem.point
-                        if pt != None:
-                            self.board[pt.y][pt.x] = match.replaceGem
+                        if match != None:
+                            # Remove all Gems that were contained in the Match
+                            for gem in match.matchedGems:
+                                self.board[gem.point.y][gem.point.x] = None
+                            
+                            replaceGem = match.replaceGem
+                            if replaceGem != None:
+                                pt = replaceGem.point
+                                self.board[pt.y][pt.x] = match.replaceGem
+                            
+                            totalPoints += matchPoints
+        return totalPoints
     
-    # Finds matches containing point - only search down and to the right
-    # Returns a Match object representing the match found, or None if no match
-    # was found
-    def findMatches(self, point):
-        right = Point(1, 0)
-        down = Point(0, 1)
-        
-        self.findMatchesHelper(point, right, 1, False)
-        self.findMatchesHelper(point, down, 1, False)
-    
-    def findMatchesHelper(self, point, direction, numInARow, isPerp):
-        newPt = point + direction
-        if self.isOnBoard(newPt):
-            color = self.board[point.y][point.x].color
-    
+    # Returns a Match if gem is the topleft-most gem in a 5-in-a-row match
     def getMatch5(self, gem):
         return self.getMatchX(gem, 5)
     
+    # Returns a Match if gem is the topleft-most gem in an "L" or "T" match
     def getMatchLT(self, gem):
         dirs = (Point(1,0),Point(0,1))
+        
         for direction in dirs:
-            matchedGems = self.getMatchedConsec(gem, 3, direction)
-            
+            matchedGems = self.getMatchedGemsXDir(gem, 3, direction)
+            if matchedGems != None:
+                dir2 = dirs[direction == dirs[0]] # dir2 is the item in dirs that is not direction
+                for matchedGem in matchedGems:
+                    matchedGems2 = self.getMatchedGemsXDir(matchedGem, 3, dir2)
+                    if matchedGems2 != None:
+                        # Return a Match corresponding to the found match
+                        matchedGems2.remove(matchedGem)
+                        matchedGems.extend(matchedGems2)
+                        return Match(matchedGems, None)
     
+    # Returns a Match if gem is the topleft-most gem in a 4-in-a-row match
     def getMatch4(self, gem):
         return self.getMatchX(gem, 4)
     
+    # Returns a Match if gem is the topleft-most gem in a 3-in-a-row match
     def getMatch3(self, gem):
         return self.getMatchX(gem, 3)
     
@@ -123,30 +159,49 @@ class Board:
         for direction in dirs:
             matchedGems = self.getMatchedGemsXDir(gem, x, direction)
             if matchedGems != None:
-                return Match(matchedGems, gem)
+                return Match(matchedGems, None)
         return None
     
     # Returns a list of gems if gem is the first in a sequence of x same-colored
     # gems in direction
     def getMatchedGemsXDir(self, gem, x, direction):
-        matchedGems = []
+        matchedGems = [gem]
         for i in range(1, x):
             newPt = direction * i + gem.point
-            newGem = self.board[newPt.y][newPt.x]
-            if newGem.color != gem.color:
+            
+            if self.isOnBoard(newPt):
+                newGem = self.board[newPt.y][newPt.x]
+                
+                if newGem == None or newGem.color != gem.color:
+                    return None
+                    
+                #if gem.color == 'purple' and gem.point.x == 1 and gem.point.y == 2 and x == 3:
+                #    print direction, newPt, i, x, newGem
+                matchedGems.append(newGem)
+            else:
                 return None
-            matchedGems.append(newGem)
         return matchedGems
     
     # Returns True if the given point is on the board and False otherwise
     def isOnBoard(self, point):
         return point.x >= 0 and point.y >= 0 and point.x < self.boardDim.x and point.y < self.boardDim.y
+    
+    def __repr__(self):
+        rep = str(self.boardDim) + '\n'
+        
+        for row in self.board:
+            rep += str(row) + '\n'
+        
+        return rep
 
 # Represents a Gem match
 class Match:
     def __init__(self, matchedGems, replaceGem):
         self.matchedGems = matchedGems
         self.replaceGem = replaceGem
+        
+    def __repr__(self):
+        return 'Match(%s, %s)' % (self.matchedGems, self.replaceGem)
         
 # Represents a 2D point
 class Point:

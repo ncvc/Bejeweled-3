@@ -10,16 +10,17 @@ class Bot:
     def __init__(self):
         boardDim = gameState.Point(8,8)
         
-        self.ai = AI.AI()
+        self.ai = AI.AI(boardDim, 1)
         self.gameInterface = gameInterface.GameInterface(boardDim)
         self.gameState = gameState.GameState(boardDim)
     
     # Begins a playing a game
     def start(self):
-        time.sleep(2)
+        
         
         while self.gameState.gameOver != True:
-            if self.gameInterface.isMouseOnGame():
+            time.sleep(2)
+            if self.gameInterface.isMouseAtExit():
                 if alert.alert('Paused', 'Quit?'):
                     break
                 
