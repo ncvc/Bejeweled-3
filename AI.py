@@ -27,35 +27,38 @@ class AI:
     # Takes a board and returns a Move
     def determineMove(self, board):
         startTime = time.time()
-        points, move, matches = self.getBestMove(board, 0, 1)
+        points, move, totalMatches, matches = self.getBestMove(board, 0, 1)
         totalTime = time.time() - startTime
         move.score = points
         
-        print 'Best move calculated in %i! %i projected points earned in the next %i turns with %i matches' % (totalTime, points, self.depth, matches)
-        
+        print 'Best move calculated in %fs! %i projected points earned in the next %i turns with %i matches' % (totalTime, points, self.depth, totalMatches)
+        print board
         return move
         
     def getBestMove(self, board, totalPoints, moveNum):
         bestMove = None
         maxPoints = -1
-        matches = 0
+        totalMatches = 0
+        matches = []
         print 'moveNum:', moveNum
         
         for move in self.moves:
-            # Dont't want to affect the actual board while simulating moves
-            newBoard = copy.deepcopy(board)
-            
-            points, numMatches = newBoard.makeMove(move)
-            
-            if points > 0 and moveNum < self.depth:
-                points, move = self.getBestMove(newBoard, totalPoints + points, moveNum + 1)
-            
-            if maxPoints < totalPoints + points:
-                bestMove = move
-                maxPoints = totalPoints + points
-                matches = numMatches
-        
-        return maxPoints, bestMove, matches
+            if board.moveMakesMatch(move):
+                # Don't want to affect the actual board while simulating moves
+                newBoard = copy.deepcopy(board)
+                
+                points, numMatches, matchList = newBoard.makeMove(move)
+                
+                if points > 0 and moveNum < self.depth:
+                    points, nextMove, dummyNumMatches, dummyMatches = self.getBestMove(newBoard, totalPoints + points, moveNum + 1)
+                
+                if maxPoints < totalPoints + points:
+                    bestMove = move
+                    maxPoints = totalPoints + points
+                    totalMatches = numMatches
+                    matches = matchList
+                    
+        return maxPoints, bestMove, totalMatches, matches
                 
         
     '''

@@ -22,7 +22,7 @@ class GameState:
     
     # Updates the board to reflect the given move and adds to the total score
     def makeMove(self, move):
-        score, matches = self.board.makeMove(move)
+        score, numMatches, matches = self.board.makeMove(move)
         self.score += score
     
     # Returns the current level
@@ -54,17 +54,30 @@ class Board:
     def makeMove(self, move):
         self.swapGems(move)
         
+        matches = []
+        
         points = 1
         totalPoints = 0
         numMatches = -1
         
         while points > 0:
             numMatches += 1
-            points = self.removeMatches()
+            points, matchList = self.removeMatches()
+            matches.extend(matchList)
             self.dropGems()
             totalPoints += points
         
-        return totalPoints, numMatches
+        return totalPoints, numMatches, matches
+    
+    # returns True if move would cause a new match, False otherwise
+    def moveMakesMatch(self, move):
+        self.swapGems(move)
+        
+        madeMatch = self.containsMatch([move.point1, move.point2])
+        
+        self.swapGems(move)
+        
+        return madeMatch
         
     # Updates the board to represent just the swapping of two Gems without
     # removing any matches
@@ -96,10 +109,28 @@ class Board:
                         self.board[newY + 1][x] = gem
                     self.board[0][x] = None
     
+    # Returns True if there are matches on the board containing one of the Points in points, False otherwise
+    def containsMatch(self, points):
+        for matchName, (matchFunc, matchPoints) in self.matchTypes.items():
+            for x in range(self.boardDim.x):
+                for y in range(self.boardDim.y):
+                    gem = self.board[y][x]
+                    
+                    if gem != None:
+                        match = matchFunc(gem)
+                        
+                        if match != None:
+                            for matchedGem in match.matchedGems:
+                                for point in points:
+                                    if point.x == matchedGem.point.x and point.y == matchedGem.point.y:
+                                        return True
+        return False
+    
     # Removes any matches, placing special Gems in case of L, T, or 4- or
     # 5-in-a-row
     # Returns the number of points gained
     def removeMatches(self):
+        matches = []
         totalPoints = 0
         for matchName, (matchFunc, matchPoints) in self.matchTypes.items():
             #print 'Searching for matches of type: %s' % matchName
@@ -112,6 +143,7 @@ class Board:
                         match = matchFunc(gem)
                         
                         if match != None:
+                            matches.append(match)
                             # Remove all Gems that were contained in the Match
                             for gem in match.matchedGems:
                                 self.board[gem.point.y][gem.point.x] = None
@@ -122,7 +154,8 @@ class Board:
                                 self.board[pt.y][pt.x] = match.replaceGem
                             
                             totalPoints += matchPoints
-        return totalPoints
+                    
+        return totalPoints, matches
     
     # Returns a Match if gem is the topleft-most gem in a 5-in-a-row match
     def getMatch5(self, gem):
