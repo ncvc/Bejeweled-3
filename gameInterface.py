@@ -74,6 +74,7 @@ class GameInterface:
                 print 'submit found!'
                 mouse.move(submitPt[0], submitPt[1])
                 mouse.click()
+            time.sleep(10)
             self.replayGame()
             return self.gameState
         

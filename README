@@ -1,1 +1,5 @@
 A bejeweled bot to play here: http://www.xbox.com/en-US/Marketplace/Product/Bejeweled-3
+
+TODO:
+* Make the lookaheads more efficient - right now it takes ~30s to look ahead just one move
+* Make the infinite replay functionality not suck
