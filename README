@@ -1,5 +1,6 @@
 A bejeweled bot to play here: http://www.xbox.com/en-US/Marketplace/Product/Bejeweled-3
 
 TODO:
-* Make the lookaheads more efficient - right now it takes ~30s to look ahead just one move
+* Make the lookaheads more efficient - right now it takes ~5s to look ahead just one move
+	* Most likely an algorithmic improvement is the best solution, but other options would include multithreading or CUDA (which would be badass)
 * Make the infinite replay functionality not suck

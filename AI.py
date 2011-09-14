@@ -32,11 +32,11 @@ class AI:
         move.score = points
         
         print 'Best move calculated in %fs! %i projected points earned in the next %i turns with %i matches' % (totalTime, points, self.depth, totalMatches)
-        print board
+
         return move
         
     def getBestMove(self, board, totalPoints, moveNum):
-        bestMove = None
+        bestMove = self.moves[0]
         maxPoints = -1
         totalMatches = 0
         matches = []

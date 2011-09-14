@@ -10,7 +10,7 @@ class Bot:
     def __init__(self):
         boardDim = gameState.Point(8,8)
         
-        self.ai = AI.AI(boardDim, 3)
+        self.ai = AI.AI(boardDim, 2)
         self.gameInterface = gameInterface.GameInterface(boardDim)
         self.gameState = gameState.GameState(boardDim)
     
