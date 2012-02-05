@@ -1,4 +1,7 @@
-A bejeweled bot to play here: http://www.xbox.com/en-US/Marketplace/Product/Bejeweled-3
+This was started when one of Chris' coworkers challenged everyone to beat her high score in Bejewled. Needless to say, we decided it would be easier to write a bot to do it for us, rather than learn to play ourselves.
+
+Uses the autopy library found here: https://github.com/msanders/autopy (Only tested on Windows)
+The game can be found here: http://www.xbox.com/en-US/Marketplace/Product/Bejeweled-3
 
 TODO:
 * Make the lookaheads more efficient - right now it takes ~5s to look ahead just one move
